@@ -33,4 +33,6 @@ Limits: 500,000 UTF-16 code units, 1 MiB per file, 100 JSON nesting levels. Bina
 
 Browser extensions, clipboard managers, OS memory/swap and compromised hosting are outside this app's privacy boundary. No claim of secure erasure or complete secret removal. Use a trusted local checkout for highly sensitive material.
 
+Deployment config, release steps and rollback: `deploy/README.md`. Public URL: https://key-redact.sesar.me (requires Cloudflare Tunnel hostname routing).
+
 Specification and delivery evidence: `docs/specs/browser-redactor/spec.md`.

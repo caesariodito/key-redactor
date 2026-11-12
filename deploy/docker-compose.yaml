@@ -1,0 +1,36 @@
+services:
+  key-redactor:
+    image: caddy:2.11.4@sha256:0c994536bddb66445885237f1a5dcc1916bccea922661c76b4e9fc24061f9b52
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./current:/srv:ro
+    networks:
+      web:
+        aliases: [key-redactor]
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:8080/]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      homepage.group: "dito-asus-laptop · 100.81.4.38"
+      homepage.name: Key Redactor
+      homepage.icon: mdi-key-remove
+      homepage.href: https://key-redact.sesar.me
+      homepage.description: Browser-only configuration secret redactor
+      homepage.siteMonitor: http://key-redactor:8080
+
+networks:
+  web:
+    external: true
+    name: web
