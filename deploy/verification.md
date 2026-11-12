@@ -1,0 +1,16 @@
+# Deployment evidence — 2026-11-12
+
+- Approved public repository: https://github.com/caesariodito/key-redactor, GitHub account verified as `caesariodito`, remote default branch `main`.
+- Host: `dito-asus-laptop`, Ubuntu amd64; stack `/home/dito/stacks/key-redactor`.
+- Static assets built from commit `884530b38777edd391023b14e729fac0bd33a021`; 19 tests and Astro production build pass. Deployment-only follow-up config adds bounded tmpfs for Caddy runtime bookkeeping, disables config persistence and uses HTTP/1 internally. No app source changed.
+- Runtime: Caddy 2.11.4 pinned digest, uid 1000, read-only root/config/assets, bounded tmpfs, all capabilities dropped except `NET_BIND_SERVICE` required by image executable file capability, no-new-privileges, CPU/memory/PID limits. Initial all-capability-drop attempt failed to execute Caddy; added minimum image-required capability and validation passed. No published host ports (`PortBindings={}`).
+- Compose config and Caddy config validated. Container healthy after startup, explicit restart, and final config recreate. Initial read-only Caddy bookkeeping errors resolved with small tmpfs; final logs contain no runtime errors.
+- Central ingress route `http://key-redact.sesar.me` proxies to `key-redactor:8080`. Only ingress Caddy restarted; cloudflared and unrelated apps untouched. Pre-edit Caddyfile backup: `/home/dito/stacks/ingress/Caddyfile.before-key-redactor-20261112T115244Z`. Existing dirty ingress Git content retained/uncommitted.
+- Before/after existing origin responses: Grafana 302, Valorant 200, Gitdeck 401, Expense 200, unknown hostname 404. New origin 200.
+- Public HTTPS https://key-redact.sesar.me returns 200. Tunnel hostname already functional; no DNS/tunnel/token changes made.
+- Response headers: CSP `frame-ancestors 'none'` supplements Astro meta CSP `connect-src 'none'`; X-Frame-Options DENY; nosniff; no-referrer; restricted permissions; no-store. Cloudflare adds its edge headers/NEL policy; app includes no analytics or outbound calls.
+- Guest Chromium public check: example removes synthetic secrets while retaining database context; live .env redaction correct; mobile 390px has no horizontal document overflow; editor height 360px; no page errors; localStorage/sessionStorage empty. Captured requests only same-origin document/CSS/JS/favicon, all 200. No pasted input transmitted.
+- Updated host AGENTS inventory, stacks README, ingress README, and stack release/rollback documentation. Homepage discovery labels included for existing read-only Docker discovery, but Homepage dashboard discovery not independently checked.
+- No stateful data or application credentials; backup is release directories/config. Rollback instructions in `deploy/README.md`. No release/image cleanup, repository history rewrite or changes to unrelated service configurations.
+
+Limits: prior app source-only independent review accepted; deployment checked directly with Compose/Caddy, HTTP and browser checks, not independent security audit. Detection remains best-effort. Full TypeScript typecheck not run. Local task worktree retains implementation; original local `main` remains initial baseline, while published `origin/main` contains complete app.
