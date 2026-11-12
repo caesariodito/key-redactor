@@ -1,0 +1,98 @@
+---
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Redact secrets from configuration files in your browser. Keep structure and context, without uploading your files." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Key Redactor — context, without credentials</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <a class="brand" href="/" aria-label="Key Redactor home"><span class="mark" aria-hidden="true">[ k ]</span> key redactor</a>
+        <span class="local"><span aria-hidden="true" class="dot"></span> Runs in your browser</span>
+      </header>
+      <section class="intro" aria-labelledby="title">
+        <p class="eyebrow">SHARE THE SETUP. NOT THE SECRETS.</p>
+        <h1 id="title">Keep context.<br /><span>Leave credentials out.</span></h1>
+        <p class="lede">Redact keys, passwords, and tokens from your config before sharing it with AI. Your files stay in this tab.</p>
+      </section>
+      <section class="workspace" aria-label="Configuration redactor">
+        <div class="toolbar">
+          <div class="format"><label for="format">Format</label><select id="format"><option value="auto">Auto-detect</option><option value="json">JSON / JSONC</option><option value="env">.env</option><option value="text">Plain text</option></select></div>
+          <div class="tools"><button id="example" type="button">Try example</button><button id="clear" type="button">Clear</button><label class="file-button" for="file">Open file<input id="file" type="file" /></label></div>
+        </div>
+        <div class="editors">
+          <div class="editor" id="drop-zone">
+            <div class="editor-heading"><label for="source">Original</label><span id="source-info">Paste or drop a text file</span></div>
+            <textarea id="source" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="input-help status" placeholder={'# Paste your .env, appsettings.json, or config here\n\nAPI_KEY="your-secret-key"\nPORT=3000'}></textarea>
+          </div>
+          <div class="editor output">
+            <div class="editor-heading"><label for="output">Redacted preview</label><span id="result-info">Waiting for input</span></div>
+            <textarea id="output" readonly spellcheck="false" autocomplete="off" aria-label="Redacted preview" placeholder="Your config, minus detected secrets."></textarea>
+          </div>
+        </div>
+        <div class="actionbar"><p id="input-help">Structure stays. Detected secrets become <code>[REDACTED_1]</code>.</p><div class="tools"><button id="download" type="button" disabled>Download</button><button id="copy" class="primary" type="button" disabled>Copy redacted text</button></div></div>
+      </section>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <aside class="warning"><strong>Review before sharing.</strong> Detection is best-effort, not proof that every secret is gone. Unusual credentials and unsupported formats can be missed. Check comments and custom fields too.</aside>
+      <footer><p>No uploads. No history. No AI calls.</p><p>Input stays in memory. Clipboard and browser extensions are outside this app’s control.</p></footer>
+      <noscript><p class="warning">JavaScript is required for local redaction. Nothing is uploaded.</p></noscript>
+    </main>
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>
+<style is:global>
+  :root { color-scheme: dark; --bg: #101210; --panel: #171a17; --line: #30372f; --text: #edf0e8; --muted: #a7b1a3; --accent: #c5ef8a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); }
+  main { max-width: 1320px; margin: auto; padding: 0 40px; }
+  header { height: 96px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 14px; font-weight: 650; font-size: 18px; letter-spacing: -.5px; color: var(--text); text-decoration: none; }
+  .mark { color: var(--accent); font: 20px ui-monospace, monospace; letter-spacing: -2px; }
+  .local { display: flex; gap: 9px; align-items: center; font-size: 12px; color: var(--muted); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .intro { padding: 58px 0 38px; }
+  .eyebrow { margin: 0 0 20px; font: 11px ui-monospace, monospace; letter-spacing: 1.7px; color: var(--accent); }
+  h1 { font-size: clamp(36px, 4.6vw, 60px); letter-spacing: -2.5px; line-height: 1.06; font-weight: 550; margin: 0; }
+  h1 span { color: var(--muted); }
+  .lede { max-width: 530px; color: var(--muted); font-size: 15px; line-height: 1.7; margin: 22px 0 0; }
+  .workspace { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
+  .toolbar, .actionbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; }
+  .toolbar { border-bottom: 1px solid var(--line); }
+  .format, .tools { display: flex; align-items: center; gap: 10px; }
+  .format label { font-size: 12px; color: var(--muted); }
+  button, select, .file-button { font: inherit; font-size: 12px; border: 1px solid var(--line); border-radius: 6px; background: #20251f; color: var(--text); padding: 9px 12px; min-height: 38px; }
+  button, .file-button, select { cursor: pointer; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.primary { color: #17200e; background: var(--accent); border-color: var(--accent); font-weight: 650; }
+  .file-button { position: relative; overflow: hidden; display: inline-flex; align-items: center; }
+  .file-button input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+  :focus-visible, .file-button:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .editors { display: grid; grid-template-columns: 1fr 1fr; }
+  .editor { min-width: 0; background: #131613; }
+  .editor:first-child { border-right: 1px solid var(--line); }
+  .output { background: #161b15; }
+  .editor.dragging { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .editor-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 20px; }
+  .editor-heading label { font-size: 13px; font-weight: 550; }
+  .editor-heading span { color: var(--muted); font: 11px ui-monospace, monospace; overflow-wrap: anywhere; text-align: right; }
+  textarea { display: block; width: 100%; height: 340px; min-height: 200px; resize: vertical; padding: 0 20px 20px; border: 0; border-radius: 0; background: transparent; color: #e1e7d9; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; tab-size: 2; white-space: pre; overflow: auto; }
+  textarea::placeholder { color: #76816f; opacity: 1; }
+  textarea:focus-visible { outline-offset: -3px; }
+  .actionbar { border-top: 1px solid var(--line); }
+  .actionbar p { font-size: 11px; line-height: 1.6; color: var(--muted); margin: 0; }
+  code { font-family: ui-monospace, monospace; color: #ccd9be; }
+  #status { min-height: 20px; margin: 12px 0; font-size: 13px; color: var(--accent); }
+  #status.error { color: #ffbbac; }
+  .warning { border-left: 2px solid #b59d65; padding: 2px 0 2px 14px; font-size: 12px; line-height: 1.8; color: var(--muted); max-width: 830px; }
+  .warning strong { color: #e2d2ac; font-weight: 550; }
+  footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px 0 32px; font-size: 11px; line-height: 1.6; color: var(--muted); }
+  @media (hover: hover) and (pointer: fine) { button:not(:disabled):hover, .file-button:hover { border-color: #7c8b70; } }
+  @media (max-width: 720px) { main { padding: 0 18px; } header { height: 76px; } .brand { font-size: 16px; } .local { font-size: 10px; } .intro { padding: 38px 0 28px; } h1 { letter-spacing: -1.5px; } .editors { grid-template-columns: 1fr; } .editor:first-child { border-right: 0; border-bottom: 1px solid var(--line); } textarea { height: 250px; } .toolbar, .actionbar { flex-wrap: wrap; padding: 12px; } .toolbar { gap: 12px; } .tools { gap: 7px; } footer { flex-direction: column; gap: 0; } .editor-heading { padding: 16px; } }
+</style>
