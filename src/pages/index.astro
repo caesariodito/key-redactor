@@ -82,7 +82,7 @@
   .editor-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 20px; }
   .editor-heading label { font-size: 13px; font-weight: 550; }
   .editor-heading span { color: var(--muted); font: 11px ui-monospace, monospace; overflow-wrap: anywhere; text-align: right; }
-  textarea { display: block; width: 100%; height: 340px; min-height: 200px; resize: vertical; padding: 0 20px 20px; border: 0; border-radius: 0; background: transparent; color: #e1e7d9; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; tab-size: 2; white-space: pre; overflow: auto; }
+  textarea { display: block; width: 100%; height: max(520px, 55vh); min-height: 320px; resize: vertical; padding: 0 20px 20px; border: 0; border-radius: 0; background: transparent; color: #e1e7d9; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; tab-size: 2; white-space: pre; overflow: auto; }
   textarea::placeholder { color: #76816f; opacity: 1; }
   textarea:focus-visible { outline-offset: -3px; }
   .actionbar { border-top: 1px solid var(--line); }
@@ -94,5 +94,5 @@
   .warning strong { color: #e2d2ac; font-weight: 550; }
   footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px 0 32px; font-size: 11px; line-height: 1.6; color: var(--muted); }
   @media (hover: hover) and (pointer: fine) { button:not(:disabled):hover, .file-button:hover { border-color: #7c8b70; } }
-  @media (max-width: 720px) { main { padding: 0 18px; } header { height: 76px; } .brand { font-size: 16px; } .local { font-size: 10px; } .intro { padding: 38px 0 28px; } h1 { letter-spacing: -1.5px; } .editors { grid-template-columns: 1fr; } .editor:first-child { border-right: 0; border-bottom: 1px solid var(--line); } textarea { height: 250px; } .toolbar, .actionbar { flex-wrap: wrap; padding: 12px; } .toolbar { gap: 12px; } .tools { gap: 7px; } footer { flex-direction: column; gap: 0; } .editor-heading { padding: 16px; } }
+  @media (max-width: 720px) { main { padding: 0 18px; } header { height: 76px; } .brand { font-size: 16px; } .local { font-size: 10px; } .intro { padding: 38px 0 28px; } h1 { letter-spacing: -1.5px; } .editors { grid-template-columns: 1fr; } .editor:first-child { border-right: 0; border-bottom: 1px solid var(--line); } textarea { height: 360px; } .toolbar, .actionbar { flex-wrap: wrap; padding: 12px; } .toolbar { gap: 12px; } .tools { gap: 7px; } footer { flex-direction: column; gap: 0; } .editor-heading { padding: 16px; } }
 </style>
